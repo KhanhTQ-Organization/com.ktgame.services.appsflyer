@@ -1,0 +1,5 @@
+<linker>
+    <assembly fullname="com.ktgame.services.appsflyer" ignoreIfMissing="1">
+        <namespace fullname="com.ktgame.services.appsflyer" preserve="all"/>
+    </assembly>
+</linker>

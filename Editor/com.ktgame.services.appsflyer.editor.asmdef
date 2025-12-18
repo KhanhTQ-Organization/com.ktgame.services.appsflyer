@@ -1,0 +1,17 @@
+{
+    "name": "com.ktgame.services.appsflyer.editor",
+    "rootNamespace": "com.ktgame.services.appsflyer.editor",
+    "references": [
+        "GUID:33de4609b006def4aadde0ce578aac74",
+        "GUID:ea2ae37156ab74bd0b7bf06641413d82"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
