@@ -31,9 +31,8 @@ namespace com.ktgame.services.appsflyer
 
 #if APPSFLYER
 			InitializeAppsFlyer();
-			Initialized = true;
 #endif
-
+			Initialized = true;
             _connecting = false;
         }
 
