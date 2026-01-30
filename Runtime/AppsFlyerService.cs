@@ -17,7 +17,7 @@ namespace com.ktgame.services.appsflyer
         public bool Initialized { get; set; }
 
         private bool _connecting;
-		private AppsFlyerServiceSettings _settings;
+		private AppsflyerSettingSO _settings;
 
         public async UniTask OnInitialize(IArchitecture architecture)
         {
@@ -26,7 +26,7 @@ namespace com.ktgame.services.appsflyer
             if (Initialized)
                 return;
 
-			_settings = AppsFlyerServiceSettings.Instance;
+			_settings = AppsflyerSettingSO.Instance;
             _connecting = true;
 
 #if APPSFLYER
