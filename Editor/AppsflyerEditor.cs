@@ -12,6 +12,8 @@ namespace com.ktgame.services.appsflyer.editor
 			_appsflyerSo = appsflyerSo;
 		}
 
+		[PropertySpace(20)]
+		[Title("Appsflyer Setting", Bold = true)]
 		[ShowInInspector]
 		[LabelText("Developer Key")]
 		public string DevKey
