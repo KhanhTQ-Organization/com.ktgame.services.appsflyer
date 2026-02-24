@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/KhanhTQ-Organization/com.ktgame.services.appsflyer/compare/v1.0.4...v1.0.5) (2026-02-24)
+
+
+### Bug Fixes
+
+* update ([099b0f8](https://github.com/KhanhTQ-Organization/com.ktgame.services.appsflyer/commit/099b0f8163a7a92e0a68806fe0b11c89f8741372))
+
 ## [1.0.4](https://github.com/KhanhTQ-Organization/com.ktgame.services.appsflyer/compare/v1.0.3...v1.0.4) (2026-01-30)
 
 
