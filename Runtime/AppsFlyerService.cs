@@ -39,6 +39,19 @@ namespace com.ktgame.services.appsflyer
 #if APPSFLYER
 		private void InitializeAppsFlyer()
 		{
+			if (string.IsNullOrEmpty(_settings.DevKey))
+			{
+				Debug.LogError("[AppsFlyer] Missing Developer Key! Please set it in KTGame SDK Editor. AppsFlyer Initialization aborted.");
+				return;
+			}
+			
+#if UNITY_IOS
+			if (string.IsNullOrEmpty(_settings.AppID))
+			{
+				Debug.LogWarning("[AppsFlyer] Missing App ID for iOS! Apple App ID is required for iOS builds. Initialization may fail.");
+			}
+#endif
+
 			AppsFlyer.setIsDebug(_settings.IsDebug);
 
 			AppsFlyer.initSDK(
