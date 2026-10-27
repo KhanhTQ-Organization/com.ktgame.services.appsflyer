@@ -5,7 +5,7 @@ using Sirenix.OdinInspector.Editor;
 namespace com.ktgame.services.appsflyer.editor
 {
     [InitializeOnLoad]
-    public class AppsflyerEditorModule : IEditorDirtyHandler,	IMenuTreeExtension
+    public class AppsflyerEditorModule : IEditorDirtyHandler, IMenuTreeExtension
     {
         static AppsflyerEditorModule()
         {
@@ -24,7 +24,7 @@ namespace com.ktgame.services.appsflyer.editor
         }
         public void BuildMenu(OdinMenuTree tree)
         {
-            tree.Add("Appsflyer", new AppsflyerEditor(AppsflyerSettingSO.Instance), KTEditor.GetIconComponent("appsflyer"));
+            tree.Add("Appsflyer", new AppsflyerEditor(AppsflyerSettingSO.Instance, KTWindow.Setting), KTEditor.GetIconComponent("appsflyer"));
         }
     }
 }

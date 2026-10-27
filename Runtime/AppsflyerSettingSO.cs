@@ -11,5 +11,7 @@ namespace com.ktgame.services.appsflyer
 		[HideInInspector] public string AppID;
 		[HideInInspector] public bool IsDebug;
 		[HideInInspector] public bool IsGetConversionData;
+
+		[HideInInspector] public string AppsflyerVersion = "6.18.1";
 	}
 }
