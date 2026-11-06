@@ -45,7 +45,7 @@ namespace com.ktgame.services.appsflyer.editor
 		[ShowInInspector]
 		public string AppsflyerVersion
 		{
-			get => !string.IsNullOrEmpty(_appsflyerSo?.AppsflyerVersion) ? _appsflyerSo.AppsflyerVersion : "6.18.1";
+			get => !string.IsNullOrEmpty(_appsflyerSo?.AppsflyerVersion) ? _appsflyerSo.AppsflyerVersion : AppsflyerSettingSO.DefaultAppsflyerVersion;
 			set
 			{
 				if (_appsflyerSo != null) _appsflyerSo.AppsflyerVersion = value;
@@ -66,12 +66,11 @@ namespace com.ktgame.services.appsflyer.editor
 					PackageDependenceEditor.InstallPackage(VariableEditor.ExternalDependencyManagerName, edmVer);
 				}
 
-				string version = !string.IsNullOrEmpty(AppsflyerVersion) ? AppsflyerVersion.Trim() : "6.18.1";
+				string version = !string.IsNullOrEmpty(AppsflyerVersion) ? AppsflyerVersion.Trim() : AppsflyerSettingSO.DefaultAppsflyerVersion;
 				EditorCoroutine.Start(DownloadAndInstallAppsflyer(version));
 			}
 			else
 			{
-				// Files are already imported → just refresh and add define symbol
 				PackageDependenceEditor.RefreshPackage();
 				DefineSymbolsEditor.AddDefineSymbol(DefineSymbolName.DS_APPSFLYER_INSTALLED);
 			}
@@ -137,8 +136,7 @@ namespace com.ktgame.services.appsflyer.editor
 				AssetDatabase.Refresh();
 
 				EditorUtility.ClearProgressBar();
-
-				// Apply define symbol immediately — Installation box will auto-hide
+				
 				DefineSymbolsEditor.AddDefineSymbol(DefineSymbolName.DS_APPSFLYER_INSTALLED);
 				Debug.Log("[AppsFlyer] Package imported and APPSFLYER define symbol applied. Installation complete!");
 			}
@@ -156,7 +154,7 @@ namespace com.ktgame.services.appsflyer.editor
 		[ShowInInspector]
 		public string AppsflyerVersionInstalled
 		{
-			get => !string.IsNullOrEmpty(_appsflyerSo?.AppsflyerVersion) ? _appsflyerSo.AppsflyerVersion : "6.18.1";
+			get => !string.IsNullOrEmpty(_appsflyerSo?.AppsflyerVersion) ? _appsflyerSo.AppsflyerVersion : AppsflyerSettingSO.DefaultAppsflyerVersion;
 			set
 			{
 				if (_appsflyerSo != null) _appsflyerSo.AppsflyerVersion = value;
@@ -178,7 +176,7 @@ namespace com.ktgame.services.appsflyer.editor
 			RemoveAppsflyerFiles();
 			DefineSymbolsEditor.RemoveDefineSymbol(DefineSymbolName.DS_APPSFLYER_INSTALLED);
 
-			string version = !string.IsNullOrEmpty(AppsflyerVersionInstalled) ? AppsflyerVersionInstalled.Trim() : "6.18.1";
+			string version = !string.IsNullOrEmpty(AppsflyerVersionInstalled) ? AppsflyerVersionInstalled.Trim() : AppsflyerSettingSO.DefaultAppsflyerVersion;
 			EditorCoroutine.Start(DownloadAndInstallAppsflyer(version));
 		}
 

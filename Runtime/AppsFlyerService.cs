@@ -7,44 +7,52 @@ using AppsFlyerSDK;
 
 namespace com.ktgame.services.appsflyer
 {
-    [Service(typeof(IAppsFlyerService))]
-    public class AppsFlyerService : MonoBehaviour, IAppsFlyerService
+	[Service(typeof(IAppsFlyerService))]
+	public class AppsFlyerService : MonoBehaviour, IAppsFlyerService
 #if APPSFLYER
 		, IAppsFlyerConversionData
 #endif
-    {
-        public int Priority => 0;
-        public bool Initialized { get; set; }
+	{
+		private const int AttWaitTimeoutSeconds = 60;
 
-        private bool _connecting;
+		public int Priority => 0;
+		public bool Initialized { get; set; }
+
+		private bool _connecting;
 		private AppsflyerSettingSO _settings;
 
-        public async UniTask OnInitialize(IArchitecture architecture)
-        {
-            await UniTask.WaitUntil(() => !_connecting);
+		public async UniTask OnInitialize(IArchitecture architecture)
+		{
+			await UniTask.WaitUntil(() => !_connecting);
 
-            if (Initialized)
-                return;
+			if (Initialized)
+				return;
 
 			_settings = AppsflyerSettingSO.Instance;
-            _connecting = true;
+			_connecting = true;
 
 #if APPSFLYER
 			InitializeAppsFlyer();
 #endif
 			Initialized = true;
-            _connecting = false;
-        }
+			_connecting = false;
+		}
 
 #if APPSFLYER
 		private void InitializeAppsFlyer()
 		{
+			if (_settings == null)
+			{
+				Debug.LogError("[AppsFlyer] AppsflyerSettingSO not found. AppsFlyer initialization aborted.");
+				return;
+			}
+
 			if (string.IsNullOrEmpty(_settings.DevKey))
 			{
 				Debug.LogError("[AppsFlyer] Missing Developer Key! Please set it in KTGame SDK Editor. AppsFlyer Initialization aborted.");
 				return;
 			}
-			
+
 #if UNITY_IOS
 			if (string.IsNullOrEmpty(_settings.AppID))
 			{
@@ -52,13 +60,19 @@ namespace com.ktgame.services.appsflyer
 			}
 #endif
 
-			AppsFlyer.setIsDebug(_settings.IsDebug);
+			AppsFlyer.setIsDebug(_settings.IsDebug && Debug.isDebugBuild);
 
 			AppsFlyer.initSDK(
 				_settings.DevKey,
 				_settings.AppID,
 				_settings.IsGetConversionData ? this : null
 			);
+			
+			AppsFlyer.enableTCFDataCollection(true);
+
+#if UNITY_IOS && !UNITY_EDITOR
+			AppsFlyer.waitForATTUserAuthorizationWithTimeoutInterval(AttWaitTimeoutSeconds);
+#endif
 
 			AppsFlyer.startSDK();
 		}
@@ -68,28 +82,31 @@ namespace com.ktgame.services.appsflyer
 			AppsFlyer.AFLog("didReceiveConversionData", conversionData);
 
 			var data = AppsFlyer.CallbackStringToDictionary(conversionData);
+			if (data == null)
+			{
+				Debug.LogWarning("[AppsFlyer] Conversion data could not be parsed.");
+				return;
+			}
 
-			var afStatus = data.TryGetValue("af_status", out var status)
+			var afStatus = data.TryGetValue("af_status", out var status) && status != null
 				? status.ToString()
 				: "unknown";
 
 			VariableDefineService.IsOrganicUser = afStatus == "Organic";
 			
-			if (VariableDefineService.IsVnCountry)
-			{
-				return;
-			}
-
-			if (data.TryGetValue("country", out var country))
+			if (!VariableDefineService.IsVnCountry && data.TryGetValue("country", out var country) && country != null)
 			{
 				VariableDefineService.IsVnCountry = country.ToString() == "VN";
 			}
+
+			VariableDefineService.MarkConversionDataReceived();
 		}
 
 		public void onConversionDataFail(string error)
 		{
 			Debug.LogWarning($"[AppsFlyer] ConversionDataFail: {error}");
 			VariableDefineService.IsOrganicUser = true;
+			VariableDefineService.MarkConversionDataReceived();
 		}
 
 		public void onAppOpenAttribution(string attributionData)
@@ -102,5 +119,5 @@ namespace com.ktgame.services.appsflyer
 			Debug.LogWarning($"[AppsFlyer] AppOpenAttributionFailure: {error}");
 		}
 #endif
-    }
+	}
 }
